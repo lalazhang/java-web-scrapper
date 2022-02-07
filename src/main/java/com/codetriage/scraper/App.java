@@ -23,7 +23,7 @@ public class App {
        * Here we create a document object,
        * The we use JSoup to fetch the website.
        */
-      Document doc = Jsoup.connect("https://www.codetriage.com/?language=Java").get();
+      Document doc = Jsoup.connect("https://www.metacritic.com/browse/movies/release-date/theaters/date").get();
       
       /**
        * With the document fetched,
@@ -33,9 +33,11 @@ public class App {
 
 
       // Get the list of repositories
-      Elements repositories = doc.getElementsByClass("repo-item");
       
-      /**
+      Elements repositories = doc.getElementsByClass("clamp-list");
+      
+
+    		  /**
        * For each repository, extract the following information:
        * 1. Title
        * 2. Number of issues
@@ -44,28 +46,45 @@ public class App {
        */
       for (Element repository : repositories) {
         // Extract the title
-        String repositoryTitle = repository.getElementsByClass("repo-item-title").text();
+        Elements repositorySummaries = repository.getElementsByClass("clamp-summary-wrap");
+        for (Element repositorySummary: repositorySummaries) {
+        	String movieTitle = repositorySummary.getElementsByClass("title").select("a").text();
+        	String releaseDate = repositorySummary.getElementsByClass("clamp-details").text();
+        
+
+        	
+        	System.out.println("Title: "+movieTitle);
+        	System.out.println("Release Date: "+releaseDate+"\n");
+        	
+        	String repositoryTitle = repositorySummary.getElementsByClass("title").text();
+        	
+        	//System.out.println(repositorySummary.getElementsByTag("a").text()+"\n");
+        	//System.out.println(repositoryTitle+"\n");
+        }
+       // String repositoryTitle = repositorySummaries.text();
 
         // Extract the number of issues on the repository
-        String repositoryIssues = repository.getElementsByClass("repo-item-issues").text();
+       // String repositoryIssues = repository.getElementsByClass("repo-item-issues").text();
 
         // Extract the description of the repository
-        String repositoryDescription = repository.getElementsByClass("repo-item-description").text();
+       // String repositoryDescription = repository.getElementsByClass("repo-item-description").text();
 
         // Get the full name of the repository
-        String repositoryGithubName = repository.getElementsByClass("repo-item-full-name").text();
+      //  String repositoryGithubName = repository.getElementsByClass("repo-item-full-name").text();
 
         /**
          * The repository full name contains brackets that we remove first
          * before generating the valif Github link.
          */
-        String repositoryGithubLink = "https://github.com/" + repositoryGithubName.replaceAll("[()]", "");
+       // String repositoryGithubLink = "https://github.com/" + repositoryGithubName.replaceAll("[()]", "");
 
         // Format and print the information to the console
-        System.out.println(repositoryTitle + " - " + repositoryIssues);
-        System.out.println("\t" + repositoryDescription);
-        System.out.println("\t" + repositoryGithubLink);
-        System.out.println("\n");
+       // System.out.println(repositoryTitle+"\n");
+        
+//        System.out.println(repositoryTitle + " - " + repositoryIssues);
+//        System.out.println("\t" + repositoryDescription);
+//        System.out.println("\t" + repositoryGithubLink);
+//        System.out.println("\n");
 
       }
 
